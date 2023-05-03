@@ -1,6 +1,10 @@
 const { validationResult } = require("express-validator");
 const UserModel = require("../models/User");
-const { hashedPassword, createToken } = require("../Auth/auth");
+const {
+  hashedPassword,
+  createToken,
+  comparePassword,
+} = require("../Auth/auth");
 
 module.exports.register = async (req, res) => {
   const errors = validationResult(req);
@@ -30,6 +34,40 @@ module.exports.register = async (req, res) => {
       return res.status(500).json("Server Internal Error");
     }
   } else {
-    return res.status(400).json(errors.array());
+    return res.status(400).json({ errors: errors.array() });
+  }
+};
+
+// user login
+
+module.exports.login = async (req, res) => {
+  const errors = validationResult(req);
+  if (errors.isEmpty()) {
+    const { email, password } = req.body;
+    try {
+      const user = await UserModel.findOne({ email });
+      if (user) {
+        if (await comparePassword(password, user.password)) {
+          const token = createToken({ id: user._id, name: user.name });
+          if (user.admin) {
+            return res.status(200).json({ admin: true, token });
+          } else {
+            return res.status(200).json({ admin: false, token });
+          }
+        } else {
+          return res
+            .status(404)
+            .json({ errors: [{ msg: "Password not matched." }] });
+        }
+      } else {
+        return res
+          .status(404)
+          .json({ error: [{ msg: `${email} is not found.` }] });
+      }
+    } catch (error) {
+      return res.status(500).json("Server Internal Error.");
+    }
+  } else {
+    return res.status(401).json({ errors: errors.array() });
   }
 };

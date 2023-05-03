@@ -7,3 +7,12 @@ module.exports.registerValidations = [
     .isLength({ min: 5 })
     .withMessage("Password should be 6 characters long."),
 ];
+
+module.exports.loginValidations = [
+  body("email").isEmail().normalizeEmail().withMessage("Email is required."),
+  body("password")
+    .isLength({ min: 5 })
+    .withMessage("Password required."),
+];
+
+
