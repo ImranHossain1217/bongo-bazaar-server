@@ -62,7 +62,7 @@ module.exports.login = async (req, res) => {
       } else {
         return res
           .status(404)
-          .json({ error: [{ msg: `${email} is not found.` }] });
+          .json({ errors: [{ msg: `${email} is not found.` }] });
       }
     } catch (error) {
       return res.status(500).json("Server Internal Error.");
