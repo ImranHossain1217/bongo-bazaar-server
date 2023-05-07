@@ -6,7 +6,7 @@ const categorySchema = mongoose.Schema({
     type: String,
     unique: true,
   },
-});
+},{timestamps:true});
 
 const CategoryModel = mongoose.model("categorie", categorySchema);
 module.exports = CategoryModel;
