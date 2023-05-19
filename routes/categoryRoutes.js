@@ -5,6 +5,7 @@ const {
   categories,
   fetchCategory,
   updateCategory,
+  deleteCategory,
 } = require("../controllers/categoryController");
 const { authorized } = require("../Auth/Authorization");
 const router = express.Router();
@@ -21,5 +22,6 @@ router.put(
   [categoryValidation, authorized],
   updateCategory
 );
+router.delete("/delete-category/:id", authorized, deleteCategory);
 
 module.exports = router;

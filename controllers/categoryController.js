@@ -68,7 +68,7 @@ module.exports.updateCategory = async (req, res) => {
     if (!exist) {
       const updateCategory = await CategoryModel.updateOne(
         { _id: id },
-        { $set: {name} }
+        { $set: { name } }
       );
       return res
         .status(200)
@@ -80,5 +80,17 @@ module.exports.updateCategory = async (req, res) => {
     }
   } else {
     return res.status(401).json({ errors: errors.array() });
+  }
+};
+
+// delete category
+
+module.exports.deleteCategory = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await CategoryModel.deleteOne({ _id: id });
+    return res.status(200).json({ msg: "Your Category Deleted Successfully." });
+  } catch (error) {
+    return res.status(500).json("Sever Onternal Error.");
   }
 };
